@@ -2389,7 +2389,7 @@ MonoBehaviour:
   customControl5: {fileID: 0}
   customControl6: {fileID: 0}
   customControl7: {fileID: 0}
-  reenabled: 0
+  reenabled: 1
   sTerrainDirty: 1
   importSplatMaps: []
 --- !u!1 &1375002883
@@ -3111,7 +3111,7 @@ MonoBehaviour:
   customControl5: {fileID: 0}
   customControl6: {fileID: 0}
   customControl7: {fileID: 0}
-  reenabled: 0
+  reenabled: 1
   sTerrainDirty: 0
   importSplatMaps: []
 --- !u!1 &1748686245
