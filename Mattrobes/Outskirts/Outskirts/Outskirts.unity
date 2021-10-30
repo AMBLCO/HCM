@@ -7000,7 +7000,7 @@ TerrainCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1345482457}
   m_Material: {fileID: 0}
-  m_Enabled: 1
+  m_Enabled: 0
   m_TerrainData: {fileID: 15600000, guid: d9c3c0d46d51f3241826b160091e41d0, type: 2}
   m_EnableTreeColliders: 1
 --- !u!218 &1345482461
@@ -7052,6 +7052,7 @@ GameObject:
   - component: {fileID: 1355219793}
   - component: {fileID: 1355219792}
   - component: {fileID: 1355219791}
+  - component: {fileID: 1355219794}
   m_Layer: 9
   m_Name: Terrain_Main
   m_TagString: Untagged
@@ -7095,7 +7096,7 @@ TerrainCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1355219789}
   m_Material: {fileID: 0}
-  m_Enabled: 0
+  m_Enabled: 1
   m_TerrainData: {fileID: 15600000, guid: e4d2d549255cb9b41a4383c236654c35, type: 2}
   m_EnableTreeColliders: 1
 --- !u!218 &1355219793
@@ -7135,6 +7136,36 @@ Terrain:
   m_LightmapParameters: {fileID: 15203, guid: 0000000000000000f000000000000000, type: 0}
   m_GroupingID: 0
   m_AllowAutoConnect: 0
+--- !u!114 &1355219794
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1355219789}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ee1359076689fb429e33ad9b17c5484, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  FencePoints: []
+  FencePrefabs:
+  - {fileID: 0}
+  PostPrefab: {fileID: 0}
+  FenceEndOffset: {x: 0, y: 0, z: 0}
+  FenceRotation: 0
+  FenceLength: 2
+  FenceScale: {x: 1, y: 1, z: 1}
+  CompleteLoop: 0
+  ObjectMode: 0
+  PositionVariation: {x: 0, y: 0}
+  RotationVariation: {x: -180, y: 180}
+  ScaleVariation: {x: 1, y: 1}
+  UseShear: 1
+  UseRaycast: 0
+  RaycastOffsetMax: 1
+  RaycastOffsetMin: -1
+  LayerMask: -5
 --- !u!1 &1361311624
 GameObject:
   m_ObjectHideFlags: 0
