@@ -6,11 +6,11 @@ TerrainLayer:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: microsplat_layer_Ground_SmoothRocks_2k_Diffuse_3
-  m_DiffuseTexture: {fileID: 2800000, guid: b5531a54b9c140846949bf4b0a53144d, type: 3}
-  m_NormalMapTexture: {fileID: 2800000, guid: 339e7a4acc022014ba114b7fdf3f34ca, type: 3}
+  m_Name: microsplat_layer_Stone_pkgkC0_diffuse_3
+  m_DiffuseTexture: {fileID: 2800000, guid: 72bb202d44a58af49a78a9d0bc8664b6, type: 3}
+  m_NormalMapTexture: {fileID: 2800000, guid: 50be46b536260104794c8ec345d795f4, type: 3}
   m_MaskMapTexture: {fileID: 0}
-  m_TileSize: {x: 22.222221, y: 22.222221}
+  m_TileSize: {x: 15.555555, y: 15.555555}
   m_TileOffset: {x: 0, y: 0}
   m_Specular: {r: 0, g: 0, b: 0, a: 0}
   m_Metallic: 0
