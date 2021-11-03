@@ -2781,14 +2781,7 @@ MonoBehaviour:
   terrainDesc: {fileID: 0}
   descriptorFormat: 0
   streamTexture: {fileID: 0}
-  snowMaskOverride: {fileID: 0}
-  tintMapOverride: {fileID: 0}
-  globalNormalOverride: {fileID: 0}
-  globalSAOMOverride: {fileID: 0}
-  globalEmisOverride: {fileID: 0}
-  geoTextureOverride: {fileID: 0}
   advDetailControl: {fileID: 0}
-  clipMap: {fileID: 0}
   propData: {fileID: 11400000, guid: 2a05dba70d04ddd429449608fbbf4d60, type: 2}
   addPass: {fileID: 0}
   terrain: {fileID: 1355219793}
@@ -3257,14 +3250,7 @@ MonoBehaviour:
   terrainDesc: {fileID: 0}
   descriptorFormat: 0
   streamTexture: {fileID: 0}
-  snowMaskOverride: {fileID: 0}
-  tintMapOverride: {fileID: 0}
-  globalNormalOverride: {fileID: 0}
-  globalSAOMOverride: {fileID: 0}
-  globalEmisOverride: {fileID: 0}
-  geoTextureOverride: {fileID: 0}
   advDetailControl: {fileID: 0}
-  clipMap: {fileID: 0}
   propData: {fileID: 11400000, guid: c71666fbb8afe2247946529fef006b8c, type: 2}
   addPass: {fileID: 0}
   terrain: {fileID: 1722878012}
