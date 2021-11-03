@@ -1,8 +1,0 @@
-Holdfast terrain textures:
-https://mega.nz/file/k74lEDyT#73mmRBiejtxfh_3LF6bI5u-ZUk4JgYzUbGW4GwKDYg8
-
-Microsplat modules:
-https://mega.nz/file/MFBVhKhR#GfwuH4Eho_WpJpkw2jBbfWSK2Ua9FWfDNfN22r3y9ps
-
-Terrain former:
-https://www.mediafire.com/file/1hr5liolpsqwp28/Terrain_Former.unitypackage/file
