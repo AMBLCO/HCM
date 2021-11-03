@@ -20,7 +20,7 @@ MonoBehaviour:
   clusterMode: 0
   packingMode: 0
   pbrWorkflow: 0
-  hash: -2142360576
+  hash: 114373632
   diffuseArray: {fileID: 18700000, guid: 1a51a9188286f1344809f313ebf13b40, type: 2}
   normalSAOArray: {fileID: 18700000, guid: c8c9bf3b256a8ae41b2f519d14d13b2e, type: 2}
   smoothAOArray: {fileID: 0}
@@ -174,14 +174,14 @@ MonoBehaviour:
     traxIsRoughness: 0
     traxAO: {fileID: 0}
     traxAOChannel: 1
-  - diffuse: {fileID: 2800000, guid: 72bb202d44a58af49a78a9d0bc8664b6, type: 3}
-    height: {fileID: 2800000, guid: cf0f2b95482d7a347a2bd9c100adf3a6, type: 3}
+  - diffuse: {fileID: 2800000, guid: b5531a54b9c140846949bf4b0a53144d, type: 3}
+    height: {fileID: 2800000, guid: 82b32e3bff02bf645bd61b42c83e43a4, type: 3}
     heightChannel: 2
-    normal: {fileID: 2800000, guid: 50be46b536260104794c8ec345d795f4, type: 3}
-    smoothness: {fileID: 2800000, guid: b82c841bcce301d459ffc5615c27e4e4, type: 3}
+    normal: {fileID: 2800000, guid: 339e7a4acc022014ba114b7fdf3f34ca, type: 3}
+    smoothness: {fileID: 2800000, guid: 29abe21c9407d584982e782cb09759e8, type: 3}
     smoothnessChannel: 3
     isRoughness: 0
-    ao: {fileID: 2800000, guid: aeef69f29225d144d95b6da982ea00b6, type: 3}
+    ao: {fileID: 2800000, guid: 5bcae50e89e29944097349c7985116c8, type: 3}
     aoChannel: 1
     alpha: {fileID: 0}
     alphaChannel: 1
