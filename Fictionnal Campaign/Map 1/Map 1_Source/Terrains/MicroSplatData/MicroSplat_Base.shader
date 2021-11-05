@@ -9,9 +9,10 @@
 //   RenderLoop : Surface Shader
 //////////////////////////////////////////////////////
 
-Shader "Hidden/MicroSplat/Terrain_Main_Base-152321458" {
+Shader "Hidden/MicroSplat/Terrain_Main_Base503878179" {
    Properties {
       [HideInInspector] _Control0 ("Control0", 2D) = "red" {}
+      [HideInInspector] _Control1 ("Control1", 2D) = "black" {}
       
 
       // Splats
@@ -52,7 +53,7 @@ Shader "Hidden/MicroSplat/Terrain_Main_Base-152321458" {
    ENDCG
 
    SubShader {
-      Tags{ "RenderType" = "Opaque"  "Queue" = "Geometry+100" "SplatCount" = "4"}
+      Tags{ "RenderType" = "Opaque"  "Queue" = "Geometry+100" "SplatCount" = "8"}
       Cull Back
       ZTest LEqual
       UsePass "Hidden/Nature/Terrain/Utilities/PICKING"
@@ -76,7 +77,7 @@ Shader "Hidden/MicroSplat/Terrain_Main_Base-152321458" {
 
       #define _MICROSPLAT 1
       #define _USEGRADMIP 1
-      #define _MAX4TEXTURES 1
+      #define _MAX8TEXTURES 1
       #define _PERTEXUVSCALEOFFSET 1
       #define _PERTEXHEIGHTCONTRAST 1
       #define _PERTEXTINT 1
