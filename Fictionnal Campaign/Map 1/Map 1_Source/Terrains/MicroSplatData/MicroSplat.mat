@@ -60,7 +60,7 @@ Material:
     m_Colors:
     - _DetailNoiseScaleStrengthFade: {r: 4, g: 0.5, b: 5, a: 0}
     - _ResampleDistanceParams: {r: 0.25, g: 180, b: 500, a: 0}
-    - _TessData1: {r: 12, g: 0.1, b: 4, a: 0}
+    - _TessData1: {r: 12, g: 0.2, b: 4, a: 0}
     - _TessData2: {r: 20, g: 45, b: 0.2, a: 0.25}
     - _TriplanarUVScale: {r: 1, g: 1, b: 0, a: 0}
     - _UVScale: {r: 45, g: 45, b: 0, a: 0}
