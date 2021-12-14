@@ -39,6 +39,9 @@ Shader "MicroSplat/Terrain_Background" {
 
 
 
+      _StochasticContrast("Contrast", Range(0.001, 0.999)) = 0.01
+      _StochasticScale("Scale", Range(0.25, 2)) = 1
+
 
 
    }
@@ -74,9 +77,11 @@ Shader "MicroSplat/Terrain_Background" {
       #define _MAX4TEXTURES 1
       #define _PERTEXUVSCALEOFFSET 1
       #define _PERTEXTINT 1
+      #define _PERTEXSMOOTHSTR 1
       #define _BRANCHSAMPLES 1
       #define _BRANCHSAMPLESAGR 1
       #define _DISTANCERESAMPLE 1
+      #define _STOCHASTIC 1
       #define _MSRENDERLOOP_SURFACESHADER 1
 
       #define _MSRENDERLOOP_SURFACESHADER 1
@@ -163,6 +168,12 @@ Shader "MicroSplat/Terrain_Background" {
 
 
      half _DistanceResampleAlbedoStrength;
+
+         half _StochasticContrast;
+         half _StochasticScale;
+
+
+
 
 
       // dynamic branching helpers, for regular and aggressive branching
@@ -1254,6 +1265,310 @@ void PrepareStochasticUVs(float scale, float2 uv, out float2 uv1, out float2 uv2
    weights = half3(w1, w2, w3);
    
 }
+
+
+
+half4 StochasticSampleDiffuse(float3 uv, out half4 cw, MIPFROMATRAW mipLevel)
+{
+   float3 uv1, uv2, uv3;
+   half3 w;
+   PrepareStochasticUVs(_StochasticScale, uv, uv1, uv2, uv3, w);
+   
+   #if _PERTEXSTOCHASTIC
+      half4 data = tex2Dlod(_PerTexProps, float4(uv.z/32, 9.5/32, 0, 0));
+      MSBRANCHCLUSTER(data.b-0.5)
+      {
+         COUNTSAMPLE
+         return MICROSPLAT_SAMPLE(_Diffuse, uv, mipLevel);
+      }
+   #endif
+   half4 G1 = half4(0,0,0,0);
+   half4 G2 = half4(0,0,0,0);
+   half4 G3 = half4(0,0,0,0);
+
+   float contrast = _StochasticContrast;
+   #if _PERTEXCLUSTERCONTRAST
+      contrast = tex2Dlod(_PerTexProps, float4(uv.z/32, 10.5/32, 0, 0)).r;
+   #endif
+
+   // apply contrast early to help sample culling in albedo pass
+   // this changes our contrast curve to have a minimum, but I don't think
+   // blurry blends are desired with stochastic..
+   half3 mw = min(0.0, contrast - 0.45);
+   w = saturate(lerp(mw, 1, w));
+  
+   MSBRANCHCLUSTER(w.x)
+   {
+      G1 = MICROSPLAT_SAMPLE(_Diffuse, uv1, mipLevel);
+      COUNTSAMPLE
+   }
+   MSBRANCHCLUSTER(w.y)
+   {
+      G2 = MICROSPLAT_SAMPLE(_Diffuse, uv2, mipLevel);
+      COUNTSAMPLE
+   }
+   MSBRANCHCLUSTER(w.z)
+   {
+      G3 = MICROSPLAT_SAMPLE(_Diffuse, uv3, mipLevel);
+      COUNTSAMPLE
+   }   
+   
+   
+   
+   cw.xyz = BaryWeightBlend(w, G1.a, G2.a, G3.a, contrast);
+   cw.w = 1;
+   
+   return G1 * cw.x + G2 * cw.y + G3 * cw.z;
+
+}
+
+half4 StochasticSampleDiffuseLOD(float3 uv, out half4 cw, MIPFROMATRAW mipLevel)
+{
+   float3 uv1, uv2, uv3;
+   half3 w;
+   PrepareStochasticUVs(_StochasticScale, uv, uv1, uv2, uv3, w);
+   
+   #if _PERTEXSTOCHASTIC
+      half4 data = tex2Dlod(_PerTexProps, float4(uv.z/32, 9.5/32, 0, 0)); 
+      MSBRANCHCLUSTER(data.b-0.5)
+      {
+         return UNITY_SAMPLE_TEX2DARRAY_LOD(_Diffuse, uv, mipLevel);
+      }
+   #endif
+
+   float contrast = _StochasticContrast;
+   #if _PERTEXCLUSTERCONTRAST
+      contrast = tex2Dlod(_PerTexProps, float4(uv.z/32, 10.5/32, 0, 0)).r;
+   #endif
+
+   // pre contrast for culling
+   half3 mw = min(0.0, contrast - 0.45);
+   w = saturate(lerp(mw, 1, w));
+   
+   half4 G1 = half4(0,0,0,0);
+   half4 G2 = half4(0,0,0,0);
+   half4 G3 = half4(0,0,0,0);
+
+   MSBRANCHCLUSTER(w.x)
+   {
+      G1 = UNITY_SAMPLE_TEX2DARRAY_LOD(_Diffuse, uv1, mipLevel);
+   }
+   MSBRANCHCLUSTER(w.y)
+   {
+      G2 = UNITY_SAMPLE_TEX2DARRAY_LOD(_Diffuse, uv2, mipLevel);
+   }
+   MSBRANCHCLUSTER(w.z)
+   {
+      G3 = UNITY_SAMPLE_TEX2DARRAY_LOD(_Diffuse, uv3, mipLevel);
+   }
+   
+   
+   
+   cw.xyz = BaryWeightBlend(w, G1.a, G2.a, G3.a, contrast);
+   cw.w = 1;
+   
+   return G1 * cw.x + G2 * cw.y + G3 * cw.z;
+
+}
+
+half4 StochasticSampleNormal(float3 uv, half4 cw, MIPFROMATRAW mipLevel)
+{
+   float3 uv1, uv2, uv3;
+   half3 w;
+   PrepareStochasticUVs(_StochasticScale, uv, uv1, uv2, uv3, w);
+   
+   #if _PERTEXSTOCHASTIC
+      half4 data = tex2Dlod(_PerTexProps, float4(uv.z/32, 9.5/32, 0, 0)); 
+      MSBRANCHCLUSTER(data.b-0.5)
+      {
+         COUNTSAMPLE
+         return MICROSPLAT_SAMPLE(_NormalSAO, uv, mipLevel);
+      }
+   #endif
+   
+   half4 G1 = half4(0,0.5,1,0.5);
+   half4 G2 = half4(0,0.5,1,0.5);
+   half4 G3 = half4(0,0.5,1,0.5);
+
+   // So, when triplanar is on, the cw data gets stomped somehow, and we can't do stochastic on the normals. So
+   // we have to disabled that here and recompute the blend, which decorilates the texture from the albedo.
+   // So it doesn't look or perform as good, which is sad.. 
+
+   #if _TRIPLANAR
+      float contrast = _StochasticContrast;
+      #if _PERTEXCLUSTERCONTRAST
+         contrast = tex2Dlod(_PerTexProps, float4(uv.z/32, 10.5/32, 0, 0)).r;
+      #endif
+
+      // pre contrast for culling
+      half3 mw = min(0.0, contrast - 0.45);
+      w = saturate(lerp(mw, 1, w));
+
+      //MSBRANCHCLUSTER(cw.x)
+      {
+         G1 = MICROSPLAT_SAMPLE(_NormalSAO, uv1, mipLevel);
+         COUNTSAMPLE
+
+         #if _PACKINGHQ
+            G1.rb = MICROSPLAT_SAMPLE(_SmoothAO, uv1, mipLevel).ga;
+            COUNTSAMPLE
+         #endif
+      }
+      //MSBRANCHCLUSTER(cw.y)
+      {
+         G2 = MICROSPLAT_SAMPLE(_NormalSAO, uv2, mipLevel);
+         COUNTSAMPLE
+
+         #if _PACKINGHQ
+            G2.rb = MICROSPLAT_SAMPLE(_SmoothAO, uv2, mipLevel).ga;
+            COUNTSAMPLE
+         #endif
+      }
+      //MSBRANCHCLUSTER(cw.z)
+      {
+         G3 = MICROSPLAT_SAMPLE(_NormalSAO, uv3, mipLevel);
+         COUNTSAMPLE
+
+         #if _PACKINGHQ
+            G3.rb = MICROSPLAT_SAMPLE(_SmoothAO, uv3, mipLevel).ga;
+            COUNTSAMPLE
+         #endif
+      }
+
+      cw.xyz = BaryWeightBlend(w, G1.a, G2.a, G3.a, contrast);
+      cw.w = 1;
+   #else
+   MSBRANCHCLUSTER(cw.x)
+   {
+      G1 = MICROSPLAT_SAMPLE(_NormalSAO, uv1, mipLevel);
+      COUNTSAMPLE
+
+      #if _PACKINGHQ
+         G1.rb = MICROSPLAT_SAMPLE(_SmoothAO, uv1, mipLevel).ga;
+         COUNTSAMPLE
+      #endif
+   }
+   MSBRANCHCLUSTER(cw.y)
+   {
+      G2 = MICROSPLAT_SAMPLE(_NormalSAO, uv2, mipLevel);
+      COUNTSAMPLE
+
+      #if _PACKINGHQ
+         G2.rb = MICROSPLAT_SAMPLE(_SmoothAO, uv2, mipLevel).ga;
+         COUNTSAMPLE
+      #endif
+   }
+   MSBRANCHCLUSTER(cw.z)
+   {
+      G3 = MICROSPLAT_SAMPLE(_NormalSAO, uv3, mipLevel);
+      COUNTSAMPLE
+
+      #if _PACKINGHQ
+         G3.rb = MICROSPLAT_SAMPLE(_SmoothAO, uv3, mipLevel).ga;
+         COUNTSAMPLE
+      #endif
+   }
+   #endif
+
+   return G1 * cw.x + G2 * cw.y + G3 * cw.z; 
+}
+
+
+half4 StochasticSampleEmis(float3 uv, half4 cw, MIPFROMATRAW mipLevel)
+{
+#if _USEEMISSIVEMETAL
+   float3 uv1, uv2, uv3;
+   half3 w;
+   PrepareStochasticUVs(_StochasticScale, uv, uv1, uv2, uv3, w);
+   
+   #if _PERTEXSTOCHASTIC
+      half4 data = tex2Dlod(_PerTexProps, float4(uv.z/32, 9.5/32, 0, 0)); 
+      MSBRANCHCLUSTER(data.b-0.5)
+      { 
+         COUNTSAMPLE
+         return MICROSPLAT_SAMPLE(_EmissiveMetal, uv, mipLevel);
+      }
+   #endif
+   
+   half4 G1 = half4(0,0,0,0);
+   half4 G2 = half4(0,0,0,0);
+   half4 G3 = half4(0,0,0,0);
+   MSBRANCHCLUSTER(cw.x)
+   {
+      G1 = MICROSPLAT_SAMPLE(_EmissiveMetal, uv1, mipLevel);
+      COUNTSAMPLE
+   }
+   MSBRANCHCLUSTER(cw.y)
+   {
+      G2 = MICROSPLAT_SAMPLE(_EmissiveMetal, uv2, mipLevel);
+      COUNTSAMPLE
+   }
+   MSBRANCHCLUSTER(cw.z)
+   {
+      G3 = MICROSPLAT_SAMPLE(_EmissiveMetal, uv3, mipLevel);
+      COUNTSAMPLE
+   }
+  
+   return G1 * cw.x + G2 * cw.y + G3 * cw.z; 
+#endif
+return 0;
+}
+
+half4 StochasticSampleSpecular(float3 uv, half4 cw, MIPFROMATRAW mipLevel)
+{
+   #if _USESPECULARWORKFLOW
+   float3 uv1, uv2, uv3;
+   half3 w;
+   PrepareStochasticUVs(_StochasticScale, uv, uv1, uv2, uv3, w);
+   
+   #if _PERTEXSTOCHASTIC
+      half4 data = tex2Dlod(_PerTexProps, float4(uv.z/32, 9.5/32, 0, 0)); 
+      MSBRANCHCLUSTER(data.b-0.5)
+      {
+         COUNTSAMPLE
+         return MICROSPLAT_SAMPLE(_Specular, uv, mipLevel);
+      }
+   #endif
+   
+   half4 G1 = half4(0,0,0,0);
+   half4 G2 = half4(0,0,0,0);
+   half4 G3 = half4(0,0,0,0);
+   MSBRANCHCLUSTER(cw.x)
+   {
+      G1 = MICROSPLAT_SAMPLE(_Specular, uv1, mipLevel);
+      COUNTSAMPLE
+   }
+   MSBRANCHCLUSTER(cw.y)
+   {
+      G2 = MICROSPLAT_SAMPLE(_Specular, uv2, mipLevel);
+      COUNTSAMPLE
+   }
+   MSBRANCHCLUSTER(cw.z)
+   {
+      G3 = MICROSPLAT_SAMPLE(_Specular, uv3, mipLevel);
+      COUNTSAMPLE
+   }
+  
+   return G1 * cw.x + G2 * cw.y + G3 * cw.z; 
+   #endif
+   return 0;
+}
+
+
+
+// ----------------------------------------------------------------------------
+
+#undef MICROSPLAT_SAMPLE_DIFFUSE
+#undef MICROSPLAT_SAMPLE_NORMAL
+#undef MICROSPLAT_SAMPLE_DIFFUSE_LOD
+#undef MICROSPLAT_SAMPLE_EMIS
+#undef MICROSPLAT_SAMPLE_SPECULAR
+
+#define MICROSPLAT_SAMPLE_DIFFUSE(u, cl, l) StochasticSampleDiffuse(u, cl, l)
+#define MICROSPLAT_SAMPLE_NORMAL(u, cl, l) StochasticSampleNormal(u, cl, l)
+#define MICROSPLAT_SAMPLE_DIFFUSE_LOD(u, cl, l) StochasticSampleDiffuseLOD(u, cl, l)
+#define MICROSPLAT_SAMPLE_EMIS(u, cl, l) StochasticSampleEmis(u, cl, l)
+#define MICROSPLAT_SAMPLE_SPECULAR(u, cl, l) StochasticSampleSpecular(u, cl, l)
 
 
 
@@ -4200,7 +4515,7 @@ ENDCG
 
    }
    Dependency "AddPassShader" = "Hidden/MicroSplat/AddPass"
-   Dependency "BaseMapShader" = "Hidden/MicroSplat/Terrain_Background_Base-1889221441"
+   Dependency "BaseMapShader" = "Hidden/MicroSplat/Terrain_Background_Base-251392193"
    CustomEditor "MicroSplatShaderGUI"
    Fallback "Nature/Terrain/Diffuse"
 }
