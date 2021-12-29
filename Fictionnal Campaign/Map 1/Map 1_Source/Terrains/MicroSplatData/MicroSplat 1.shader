@@ -78,11 +78,11 @@ Shader "MicroSplat/Terrain_Background" {
       #define _PERTEXUVSCALEOFFSET 1
       #define _PERTEXTINT 1
       #define _PERTEXSMOOTHSTR 1
+      #define _PERTEXMETALLIC 1
       #define _BRANCHSAMPLES 1
       #define _BRANCHSAMPLESAGR 1
       #define _DISTANCERESAMPLE 1
       #define _STOCHASTIC 1
-      #define _MSRENDERLOOP_SURFACESHADER 1
 
       #define _MSRENDERLOOP_SURFACESHADER 1
 
@@ -4515,7 +4515,7 @@ ENDCG
 
    }
    Dependency "AddPassShader" = "Hidden/MicroSplat/AddPass"
-   Dependency "BaseMapShader" = "Hidden/MicroSplat/Terrain_Background_Base-251392193"
+   Dependency "BaseMapShader" = "Hidden/MicroSplat/Terrain_Background_Base-2027968587"
    CustomEditor "MicroSplatShaderGUI"
    Fallback "Nature/Terrain/Diffuse"
 }
