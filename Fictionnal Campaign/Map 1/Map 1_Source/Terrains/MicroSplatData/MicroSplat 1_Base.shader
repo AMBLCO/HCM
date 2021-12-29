@@ -9,7 +9,7 @@
 //   RenderLoop : Surface Shader
 //////////////////////////////////////////////////////
 
-Shader "Hidden/MicroSplat/Terrain_Background_Base-2027968587" {
+Shader "Hidden/MicroSplat/Terrain_Background_Base-251392193" {
    Properties {
       [HideInInspector] _Control0 ("Control0", 2D) = "red" {}
       
@@ -78,7 +78,6 @@ Shader "Hidden/MicroSplat/Terrain_Background_Base-2027968587" {
       #define _PERTEXUVSCALEOFFSET 1
       #define _PERTEXTINT 1
       #define _PERTEXSMOOTHSTR 1
-      #define _PERTEXMETALLIC 1
       #define _BRANCHSAMPLES 1
       #define _BRANCHSAMPLESAGR 1
       #define _DISTANCERESAMPLE 1
