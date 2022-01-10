@@ -46,6 +46,13 @@ ModelImporter:
     4300008: windowdark
     4300010: beam ends
     4300012: broken stone
+    6400000: beam ends
+    6400002: broken stone
+    6400004: church tower door
+    6400006: renderz
+    6400008: stone walls
+    6400010: tower
+    6400012: windowdark
   externalObjects: {}
   materials:
     importMaterials: 1
@@ -79,7 +86,7 @@ ModelImporter:
     lODScreenPercentages: []
     globalScale: 1
     meshCompression: 0
-    addColliders: 0
+    addColliders: 1
     useSRGBMaterialColor: 1
     importVisibility: 1
     importBlendShapes: 1
