@@ -10,7 +10,7 @@ Material:
   m_Name: Windows
   m_Shader: {fileID: 4800000, guid: 8793935a89241024a8b9616db346a230, type: 3}
   m_ShaderKeywords: _CHROMATIC_ABERRATION _NORMALMAP _OCCLUSION_FROM_ALBEDO_ALPHA
-    _SNOW _WETNESS_RIPPLES
+    _SNOW _WETNESS_SIMPLE
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -259,7 +259,7 @@ Material:
     - _UVSecOcclusionLightmapPacked: 0
     - _UV_Clip: 0
     - _WetDroplets: 0
-    - _WetRipples: 1
+    - _WetRipples: 0
     - _Wetness: 1
     - _WetnessConst: 1
     - _WetnessConstFromGlobal: 1
@@ -305,5 +305,5 @@ Material:
     - _WetnessColor: {r: 0.2586206, g: 0.2586206, b: 0.2586206, a: 0.023529412}
     - _WetnessSpecGloss: {r: 0.09999985, g: 0.09999985, b: 0.09999985, a: 0.441}
     - bumpMap2TexelSize: {r: 1, g: 1, b: 1, a: 1}
-    - bumpMapTexelSize: {r: 0.0009765625, g: 0.0009765625, b: 1024, a: 1024}
+    - bumpMapTexelSize: {r: 1, g: 1, b: 1, a: 1}
     - heightMapTexelSize: {r: 1, g: 1, b: 1, a: 1}
